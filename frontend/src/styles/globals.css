@@ -7,9 +7,12 @@
   /* Primary colors */
   --color-primary-100: #282828;
   --color-primary-200: #ebdbb2;
+  --color-primary-300: #fbf1c7;
+  --color-primary-400: #3c3836;
+  
 
   /* Accent colors */
-  --color-accent-100: #fe8019;
+  --color-accent-100: #d65d0e;
 }
 
 /* Base Layer */
@@ -22,7 +25,7 @@
   }
 
   body {
-    @apply bg-primary-100;
+    @apply bg-primary-300 dark:bg-primary-100;
     font-family: var(--font-jetbrains-mono);
   }
 
@@ -34,7 +37,7 @@
   h5,
   h6 {
     font-family: var(--font-jetbrains-mono);
-    @apply tracking-tight text-primary-200 font-bold text-center;
+    @apply tracking-tight text-primary-400 dark:text-primary-200 font-bold text-center;
   }
 
   /* Code typography */
@@ -70,7 +73,7 @@
 
   p {
     @apply text-base md:text-lg;
-    @apply tracking-tight text-primary-200 text-center;
+    @apply tracking-tight text-primary-400 dark:text-primary-200 text-center;
   }
 }
 
