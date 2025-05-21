@@ -23,7 +23,10 @@ export function progressBar({
 
   return (
     <div
-      className={cn("relative size-24 md:size-28 lg:size-32 text-2xl font-semibold", className)}
+      className={cn(
+        "relative size-24 md:size-28 lg:size-32 text-2xl font-semibold",
+        className,
+      )}
       style={
         {
           "--circle-size": "100px",
@@ -99,7 +102,7 @@ export function progressBar({
       </svg>
       <span
         data-current-value={currentPercent}
-        className="duration-[var(--transition-length)] text-primary-200 text-xl md:text-2xl lg:text-3xl delay-[var(--delay)] absolute inset-0 m-auto size-fit ease-linear animate-in fade-in"
+        className="duration-[var(--transition-length)] text-primary-100 dark:text-primary-200 text-xl md:text-2xl lg:text-3xl delay-[var(--delay)] absolute inset-0 m-auto size-fit ease-linear animate-in fade-in"
       >
         {currentPercent}
       </span>
