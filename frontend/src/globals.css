@@ -1,0 +1,113 @@
+/* Import Tailwind CSS */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant hover (&:hover);
+
+@theme {
+  --color-primary-100: #fff0f3;
+  --color-primary-200: #a4133c;
+  --color-primary-300: #800f2f;
+}
+
+/* Base Layer */
+@layer base {
+  /* Base body styles */
+  * {
+    @apply !scroll-smooth;
+    @apply !scroll-pt-48;
+    @apply box-border;
+  }
+
+  body {
+    @apply bg-primary-100;
+    font-family: var(--font-open-sans);
+  }
+
+  /* Heading typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-open-sans);
+    @apply tracking-tight text-primary-300  font-bold lg:w-3/4;
+  }
+
+  /* Code typography */
+  code,
+  pre {
+    font-family: var(--font-open-sans);
+  }
+
+  /* H1 specific styling */
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl lg:text-3xl;
+  }
+
+  h5 {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+
+  h6 {
+    @apply text-base md:text-lg lg:text-xl;
+  }
+
+  p {
+    @apply text-base md:text-lg;
+    @apply tracking-tight text-primary-300  lg:w-3/4;
+  }
+}
+
+/* Components Layer */
+@layer components {
+  .btn {
+    @apply text-primary-100 text-base md:text-lg rounded-lg py-2.5 px-3.5 bg-primary-200 font-bold hover:opacity-75 transition duration-200;
+  }
+
+  .card {
+    @apply bg-white text-black  flex flex-col rounded-xl py-5 px-6;
+  }
+
+  .form-label {
+    @apply font-bold text-base md:text-lg;
+    @apply tracking-tight text-black;
+  }
+
+  .form-input {
+    @apply text-sm md:text-base tracking-tight w-full flex flex-col py-2.5 px-3.5 rounded-lg;
+    @apply outline-none;
+  }
+
+  .text-area {
+    @apply text-sm md:text-base tracking-tight w-full flex flex-col py-2.5 px-3.5 rounded-lg h-24 !text-primary-100;
+    @apply outline-none;
+  }
+
+  .footer-text {
+    @apply text-primary-100  hover:opacity-75;
+    @apply text-sm md:text-base tracking-tight transition duration-200;
+  }
+
+  .list-item {
+    @apply text-base md:text-lg;
+    @apply tracking-tight text-black;
+  }
+}
+
+@utility flex-center {
+  @apply flex w-full items-center flex-col;
+}
