@@ -15,7 +15,7 @@ const Home: React.FC = () => {
       <Welcome />
       <Quotes />
       <Browser />
-      <section className="grid gap-2 grid-cols-3 md:grid-cols-6">
+      <section className="w-full grid gap-2 grid-cols-3 md:grid-cols-6">
         {links.map((link) => {
           return <Link {...link} key={link.id} />;
         })}
