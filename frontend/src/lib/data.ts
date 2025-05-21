@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import type { LinkProps } from "@/types/link";
 
-const iconSize = 32;
+const iconSize = 30;
 
 const githubIcon = React.createElement(Github, { size: iconSize });
 const youtubeIcon = React.createElement(Youtube, { size: iconSize });
