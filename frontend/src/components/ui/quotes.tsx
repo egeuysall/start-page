@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const bestSteveJobsQuotes: string[] = [
+const messages: string[] = [
   "Your time is limited, so don’t waste it living someone else’s life.",
   "The people who are crazy enough to think they can change the world are the ones who do.",
   "Stay hungry, stay foolish.",
