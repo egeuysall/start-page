@@ -23,7 +23,7 @@
 
   body {
     @apply bg-primary-100;
-    font-family: var(--font-open-sans);
+    font-family: var(--font-jetbrains-mono);
   }
 
   /* Heading typography */
@@ -33,14 +33,14 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-open-sans);
-    @apply tracking-tight text-primary-200 font-bold lg:w-3/4;
+    font-family: var(--font-jetbrains-mono);
+    @apply tracking-tight text-primary-200 font-bold lg:w-3/4 text-center;
   }
 
   /* Code typography */
   code,
   pre {
-    font-family: var(--font-open-sans);
+    font-family: var(--font-jetbrains-mono);
   }
 
   /* H1 specific styling */
@@ -75,5 +75,5 @@
 }
 
 @utility flex-center {
-  @apply flex w-full items-center flex-col;
+  @apply flex w-full items-center justify-center flex-col;
 }

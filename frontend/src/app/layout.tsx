@@ -6,12 +6,8 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// Fonts
-import { jetBrainsMono, openSans } from "@/lib/fonts";
-
-// Internal Components
-import Footer from "@/components/ui/Footer";
-import Header from "@/components/ui/Header";
+// Fonts and essentials
+import { jetBrainsMono } from "@/lib/fonts";
 import LayoutWrapper from "@/components/LayoutWrapper";
 
 async function getProduct() {
@@ -186,7 +182,7 @@ export default async function RootLayout({
       lang="en"
       dir="ltr"
       suppressHydrationWarning
-      className={`${openSans.variable} ${jetBrainsMono.variable} pb-18`}
+      className={`${jetBrainsMono.variable}`}
     >
       <head>
         <script
@@ -194,20 +190,14 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="w-full h-full flex-center">
-        <LayoutWrapper jsonLdData={jsonLd}>
-          <main className="w-[90vw] md:w-[92.5vw] lg:w-[95vw]">
-            <div className="mb-32">
-              <Header />
-            </div>
+      <body className="w-screen h-screen flex-center">
+        <main className="w-[90vw] md:w-[92.5vw] lg:w-[95vw]">
+          <LayoutWrapper jsonLdData={jsonLd}>
             <Analytics />
             {children}
             <SpeedInsights />
-            <aside className="w-full flex-center mt-24">
-              <Footer />
-            </aside>
-          </main>
-        </LayoutWrapper>
+          </LayoutWrapper>
+        </main>
       </body>
     </html>
   );
