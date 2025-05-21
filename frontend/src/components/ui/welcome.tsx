@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const messages = [
+const messages: string[] = [
   "Ege, let’s make it matter.",
   "Welcome back, builder.",
   "Time to create, Ege.",

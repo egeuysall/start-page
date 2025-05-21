@@ -28,7 +28,7 @@ export const Clock: React.FC = () => {
   }, []);
 
   return (
-    <h1 className="opacity-75">
+    <h1>
       {time.slice(0, time.length - 2)}
       <span className={showColon ? "visible" : "invisible"}>:</span>
       {time.slice(-2)}

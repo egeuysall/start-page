@@ -1,23 +1,21 @@
 import React from "react";
 import { Clock } from "@/components/ui/clock";
 import { Welcome } from "@/components/ui/welcome";
-import { Link } from "@/components/ui/link";
-import { Browser } from "@/components/ui/browser";
+import { Link } from "@/components/ui/Link";
+import { Quotes } from "@/components/ui/quotes";
 
 // Import the link data
 import { links } from "@/lib/data";
 
 const Home: React.FC = () => {
   return (
-    <main className="w-full flex-center gap-4">
+    <main className="w-full flex flex-col gap-2">
       <Clock />
       <Welcome />
-      <Browser />
-      <section className="grid grid-cols-3 md:grid-cols-6 gap-4">
-        {links.map((link) => {
-          return <Link {...link} key={link.id} />;
-        })}
-      </section>
+      <Quotes />
+      {links.map((link) => {
+        return <Link {...link} key={link.id} />;
+      })}
     </main>
   );
 };
