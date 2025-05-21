@@ -191,7 +191,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="w-screen h-screen flex-center">
-        <main className="w-[90vw] md:w-[92.5vw] lg:w-[95vw]">
+        <main className="w-3/4">
           <LayoutWrapper jsonLdData={jsonLd}>
             <Analytics />
             {children}
