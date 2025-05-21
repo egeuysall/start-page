@@ -3,6 +3,7 @@ import { Clock } from "@/components/ui/clock";
 import { Welcome } from "@/components/ui/welcome";
 import { Link } from "@/components/ui/link";
 import { Quotes } from "@/components/ui/quotes";
+import { Browsee } from "@/components/ui/browser";
 
 // Import the link data
 import { links } from "@/lib/data";
@@ -13,9 +14,12 @@ const Home: React.FC = () => {
       <Clock />
       <Welcome />
       <Quotes />
-      {links.map((link) => {
-        return <Link {...link} key={link.id} />;
-      })}
+      <Browser />
+      <section className="grid gap-2 grid-cols-3 md:grid-cols-6">
+        {links.map((link) => {
+          return <Link {...link} key={link.id} />;
+        })}
+      </section>
     </main>
   );
 };
