@@ -3,7 +3,7 @@ import { Clock } from "@/components/ui/clock";
 import { Welcome } from "@/components/ui/welcome";
 import { Link } from "@/components/ui/link";
 import { Quotes } from "@/components/ui/quotes";
-import { Browsee } from "@/components/ui/browser";
+import { Browser } from "@/components/ui/browser";
 
 // Import the link data
 import { links } from "@/lib/data";
