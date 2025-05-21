@@ -10,7 +10,7 @@ import { links } from "@/lib/data";
 
 const Home: React.FC = () => {
   return (
-    <main className="w-full flex flex-col gap-2 flex-center">
+    <main className="w-full flex flex-col gap-4 flex-center">
       <Clock />
       <Welcome />
       <Quotes />
