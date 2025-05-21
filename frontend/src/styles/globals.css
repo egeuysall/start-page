@@ -70,7 +70,7 @@
 
   p {
     @apply text-base md:text-lg;
-    @apply tracking-tight text-primary-200  lg:w-3/4;
+    @apply tracking-tight text-primary-200  lg:w-3/4 text-center;
   }
 }
 
