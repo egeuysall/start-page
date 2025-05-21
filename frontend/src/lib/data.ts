@@ -23,36 +23,30 @@ export const links: LinkProps[] = [
     id: 1,
     href: "https://github.com/",
     icon: githubIcon,
-    char: "g",
   },
   {
     id: 2,
     href: "https://youtube.com/",
     icon: youtubeIcon,
-    char: "y",
   },
   {
     id: 3,
     href: "https://www.notion.so",
     icon: notionIcon,
-    char: "n",
   },
   {
     id: 4,
     href: "https://vercel.com",
     icon: vercelIcon,
-    char: "v",
   },
   {
     id: 5,
     href: "http://localhost:3000",
     icon: globeIcon,
-    char: "l",
   },
   {
     id: 6,
     href: "https://chatgpt.com/",
     icon: chatgptIcon,
-    char: "c",
   },
 ];
