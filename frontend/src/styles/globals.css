@@ -34,7 +34,7 @@
   h5,
   h6 {
     font-family: var(--font-jetbrains-mono);
-    @apply tracking-tight text-primary-200 font-bold lg:w-3/4 text-center;
+    @apply tracking-tight text-primary-200 font-bold text-center;
   }
 
   /* Code typography */
@@ -70,7 +70,7 @@
 
   p {
     @apply text-base md:text-lg;
-    @apply tracking-tight text-primary-200  lg:w-3/4 text-center;
+    @apply tracking-tight text-primary-200 text-center;
   }
 }
 
