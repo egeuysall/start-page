@@ -7,7 +7,7 @@ import { Quotes } from "@/components/ui/quotes";
 import { Browser } from "@/components/ui/browser";
 import { Progress } from "@/components/ui/progress";
 import { Weather } from "@/components/ui/weather";
-import NewsFeed from "@/components/ui/news-feed";
+import { NewsFeed } from "@/components/ui/news-feed";
 
 import { links } from "@/lib/data";
 
