@@ -1,21 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 
 export const Browser: React.FC = () => {
   const [input, setInput] = useState("");
-  const router = useRouter();
-
-  const redirect = () => {
-    // encode input and redirect to Google search
-    const query = encodeURIComponent(input);
-    router.push(`https://www.google.com/search?q=${query}`);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    redirect();
+    const query = encodeURIComponent(input);
+    window.location.href = `https://www.google.com/search?q=${query}`;
   };
 
   return (
