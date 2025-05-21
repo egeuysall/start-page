@@ -7,6 +7,7 @@ import { Quotes } from "@/components/ui/quotes";
 import { Browser } from "@/components/ui/browser";
 import { Progress } from "@/components/ui/progress";
 import { Weather } from "@/components/ui/weather";
+import NewsFeed from "@/components/ui/news-feed";
 
 import { links } from "@/lib/data";
 
@@ -28,6 +29,8 @@ const Home: React.FC = () => {
           <Link {...link} key={link.id} />
         ))}
       </section>
+      <h5 className="text-left w-full">The feed</h5>
+      <NewsFeed />
       <h5 className="text-left w-full">Code</h5>
       <img
         src="https://github-readme-stats.hackclub.dev/api/wakatime?username=2553&api_domain=hackatime.hackclub.com&theme=transparent&custom_title=Stats&layout=compact&cache_seconds=0&langs_count=6"

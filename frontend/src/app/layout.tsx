@@ -182,7 +182,7 @@ export default async function RootLayout({
       lang="en"
       dir="ltr"
       suppressHydrationWarning
-      className={`${jetBrainsMono.variable}`}
+      className={`${jetBrainsMono.variable} py-18`}
     >
       <head>
         <script
