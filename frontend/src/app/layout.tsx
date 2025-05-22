@@ -182,7 +182,7 @@ export default async function RootLayout({
       lang="en"
       dir="ltr"
       suppressHydrationWarning
-      className={`${jetBrainsMono.variable} py-48`}
+      className={`${jetBrainsMono.variable} pb-16`}
     >
       <head>
         <script
@@ -190,7 +190,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="w-screen h-screen flex flex-col items-center">
+      <body className="w-screen h-screen flex flex-col items-center mt-16">
         <main className="w-[75vw] md:w-[65vw] lg:w-[50vw]">
           <LayoutWrapper jsonLdData={jsonLd}>
             <Analytics />
