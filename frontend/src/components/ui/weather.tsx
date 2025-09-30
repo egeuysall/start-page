@@ -79,8 +79,8 @@ export const Weather: React.FC = () => {
     fetchWeather();
   }, [API_KEY]);
 
-  if (loading) return <div>Loading weather...</div>;
-  if (!weather) return <div>Unable to load weather data.</div>;
+  if (loading) return <div className="text-primary-400 dark:text-primary-200 opacity-50">Loading weather...</div>;
+  if (!weather) return <div className="text-primary-400 dark:text-primary-200 opacity-50">Unable to load weather data.</div>;
 
   return (
     <div className="flex gap-2 items-center">
