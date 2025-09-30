@@ -33,7 +33,7 @@ const Home: React.FC = () => {
       <NewsFeed />
       <h5 className="text-left w-full">Code</h5>
       <img
-        src="https://github-readme-stats.hackclub.dev/api/wakatime?username=2553&api_domain=hackatime.hackclub.com&theme=transparent&custom_title=Stats&layout=compact&cache_seconds=0&langs_count=6"
+        src="https://github-readme-stats.hackclub.dev/api/wakatime?username=19901&api_domain=hackatime.hackclub.com&&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&theme=transparent"
         alt="Hackatime Stats"
         className="w-full"
       />
