@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 
 const messages: string[] = [
-  "Your time is limited, so don’t waste it living someone else’s life.",
+  "Your time is limited, so don't waste it living someone else's life.",
   "The people who are crazy enough to think they can change the world are the ones who do.",
   "Stay hungry, stay foolish.",
   "Innovation distinguishes between a leader and a follower.",
@@ -14,12 +14,10 @@ const messages: string[] = [
 ];
 
 export const Quotes: React.FC = () => {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    const random = messages[Math.floor(Math.random() * messages.length)];
-    setMessage(random);
-  }, []);
+  const message = useMemo(
+    () => messages[Math.floor(Math.random() * messages.length)],
+    []
+  );
 
   return <p className="opacity-50">{message}</p>;
 };

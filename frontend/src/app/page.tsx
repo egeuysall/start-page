@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 import { Clock } from "@/components/ui/clock";
 import { Welcome } from "@/components/ui/welcome";
@@ -32,10 +33,13 @@ const Home: React.FC = () => {
       <h5 className="text-left w-full">The feed</h5>
       <NewsFeed />
       <h5 className="text-left w-full">Code</h5>
-      <img
+      <Image
         src="https://github-readme-stats.hackclub.dev/api/wakatime?username=19901&api_domain=hackatime.hackclub.com&&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&theme=transparent"
         alt="Hackatime Stats"
+        width={800}
+        height={400}
         className="w-full"
+        unoptimized
       />
     </main>
   );

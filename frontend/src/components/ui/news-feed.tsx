@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import NewsCard from "./news-card";
 
 type Article = {
@@ -10,19 +8,34 @@ type Article = {
   thumbnail?: string;
 };
 
-export const NewsFeed: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+async function fetchNews(): Promise<Article[]> {
+  try {
+    const res = await fetch(
+      "https://api.rss2json.com/v1/api.json?rss_url=https://www.theverge.com/rss/index.xml",
+      {
+        next: { revalidate: 1800 }, // Cache for 30 minutes
+      }
+    );
+    
+    if (!res.ok) return [];
+    
+    const data = await res.json();
+    return data.items.slice(0, 6);
+  } catch {
+    return [];
+  }
+}
 
-  useEffect(() => {
-    const fetchRSS = async () => {
-      const res = await fetch(
-        "https://api.rss2json.com/v1/api.json?rss_url=https://www.theverge.com/rss/index.xml",
-      );
-      const data = await res.json();
-      setArticles(data.items.slice(0, 6));
-    };
-    fetchRSS();
-  }, []);
+export const NewsFeed: React.FC = async () => {
+  const articles = await fetchNews();
+
+  if (articles.length === 0) {
+    return (
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <p className="opacity-50">Unable to load news feed.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
