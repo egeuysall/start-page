@@ -1,91 +1,69 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
 import { Sun, Cloud, CloudRain, CloudSnow, CloudLightning } from "lucide-react";
+
+const API_KEY = process.env.TOMORROW_API_KEY; // server-only
+const LOCATION = process.env.TOMORROW_LOCATION; // server-only
 
 type WeatherData = {
   temp: number;
   weatherCode: number;
 };
 
-const LOCATION = "42.1661,-87.9527";
-
 const getWeatherIcon = (code: number) => {
-  if (code >= 800 && code < 900)
-    return (
-      <div className="text-primary-400 dark:text-primary-200 opacity-50">
-        <Sun />
-      </div>
-    );
+  if (code >= 800 && code < 900) return <Sun className="text-primary-400 dark:text-primary-200 opacity-50" />;
   if ([500, 501, 520, 521].includes(code))
-    return (
-      <div className="text-primary-400 dark:text-primary-200 opacity-50">
-        <CloudRain />
-      </div>
-    );
+    return <CloudRain className="text-primary-400 dark:text-primary-200 opacity-50" />;
   if ([600, 601, 602].includes(code))
-    return (
-      <div className="text-primary-400 dark:text-primary-200 opacity-50">
-        <CloudSnow />
-      </div>
-    );
+    return <CloudSnow className="text-primary-400 dark:text-primary-200 opacity-50" />;
   if ([200, 201, 202].includes(code))
-    return (
-      <div className="text-primary-400 dark:text-primary-200 opacity-50">
-        <CloudLightning />
-      </div>
-    );
+    return <CloudLightning className="text-primary-400 dark:text-primary-200 opacity-50" />;
   if ([701, 711, 721, 741].includes(code))
-    return (
-      <div className="text-primary-400 dark:text-primary-200 opacity-50">
-        <Cloud />
-      </div>
-    );
-  return (
-    <div className="text-primary-400 dark:text-primary-200 opacity-50">
-      <Cloud />
-    </div>
-  );
+    return <Cloud className="text-primary-400 dark:text-primary-200 opacity-50" />;
+  return <Cloud className="text-primary-400 dark:text-primary-200 opacity-50" />;
 };
 
-export const Weather: React.FC = () => {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState(true);
+// ✅ Cached fetch: 10 minutes
+async function getWeather(): Promise<WeatherData | null> {
+  if (!API_KEY || !LOCATION) return null;
 
-  const API_KEY = process.env.NEXT_PUBLIC_TOMORROW_API_KEY || "";
-
-  useEffect(() => {
-    if (!API_KEY) {
-      setLoading(false);
-      return;
-    }
-    const fetchWeather = async () => {
-      try {
-        const res = await fetch(
-          `https://api.tomorrow.io/v4/timelines?location=${LOCATION}&fields=temperature,weatherCode&units=metric&timesteps=current&apikey=${API_KEY}`,
-        );
-        const json = await res.json();
-        const data = json.data.timelines[0].intervals[0].values;
-        setWeather({
-          temp: data.temperature,
-          weatherCode: data.weatherCode,
-        });
-      } catch {
-        setWeather(null);
-      } finally {
-        setLoading(false);
+  try {
+    const res = await fetch(
+      `https://api.tomorrow.io/v4/timelines?location=${LOCATION}&fields=temperature,weatherCode&units=metric&timesteps=current&apikey=${API_KEY}`,
+      {
+        next: { revalidate: 600 }, // cache for 10 minutes
       }
-    };
-    fetchWeather();
-  }, [API_KEY]);
+    );
 
-  if (loading) return <div className="text-primary-400 dark:text-primary-200 opacity-50">Loading weather...</div>;
-  if (!weather) return <div className="text-primary-400 dark:text-primary-200 opacity-50">Unable to load weather data.</div>;
+    if (!res.ok) return null;
+
+    const json = await res.json();
+    const data = json.data.timelines[0].intervals[0].values;
+
+    return {
+      temp: data.temperature,
+      weatherCode: data.weatherCode,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export default async function Weather() {
+  const weather = await getWeather();
+
+  if (!weather) {
+    return (
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">
+        Unable to load weather data.
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-2 items-center">
       {getWeatherIcon(weather.weatherCode)}
-      <div className="text-primary-400 dark:text-primary-200 opacity-50">{weather.temp.toFixed(1)}&#8451;</div>
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">
+        {weather.temp.toFixed(1)}&#8451;
+      </div>
     </div>
   );
-};
+}
