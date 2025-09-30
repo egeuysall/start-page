@@ -13,36 +13,36 @@ const LOCATION = "42.1661,-87.9527";
 const getWeatherIcon = (code: number) => {
   if (code >= 800 && code < 900)
     return (
-      <div className="text-primary-200">
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">
         <Sun />
       </div>
     );
   if ([500, 501, 520, 521].includes(code))
     return (
-      <div className="text-primary-200 opacity-50">
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">
         <CloudRain />
       </div>
     );
   if ([600, 601, 602].includes(code))
     return (
-      <div className="text-primary-200 opacity-50">
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">
         <CloudSnow />
       </div>
     );
   if ([200, 201, 202].includes(code))
     return (
-      <div className="text-primary-200 opacity-50">
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">
         <CloudLightning />
       </div>
     );
   if ([701, 711, 721, 741].includes(code))
     return (
-      <div className="text-primary-200 opacity-50">
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">
         <Cloud />
       </div>
     );
   return (
-    <div className="text-primary-200 opacity-50">
+    <div className="text-primary-400 dark:text-primary-200 opacity-50">
       <Cloud />
     </div>
   );
@@ -85,7 +85,7 @@ export const Weather: React.FC = () => {
   return (
     <div className="flex gap-2 items-center">
       {getWeatherIcon(weather.weatherCode)}
-      <div className="text-primary-200 opacity-50">{weather.temp.toFixed(1)}°C</div>
+      <div className="text-primary-400 dark:text-primary-200 opacity-50">{weather.temp.toFixed(1)}&#8451;</div>
     </div>
   );
 };
