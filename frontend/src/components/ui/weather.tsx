@@ -1,7 +1,7 @@
 import { Sun, Cloud, CloudRain, CloudSnow, CloudLightning } from "lucide-react";
 
-const API_KEY = process.env.TOMORROW_API_KEY; // server-only
-const LOCATION = process.env.TOMORROW_LOCATION; // server-only
+const API_KEY = process.env.TOMORROW_API_KEY;
+const LOCATION = process.env.TOMORROW_LOCATION;
 
 type WeatherData = {
   temp: number;
@@ -21,7 +21,6 @@ const getWeatherIcon = (code: number) => {
   return <Cloud className="text-primary-400 dark:text-primary-200 opacity-50" />;
 };
 
-// ✅ Cached fetch: 10 minutes
 async function getWeather(): Promise<WeatherData | null> {
   if (!API_KEY || !LOCATION) return null;
 
@@ -29,7 +28,7 @@ async function getWeather(): Promise<WeatherData | null> {
     const res = await fetch(
       `https://api.tomorrow.io/v4/timelines?location=${LOCATION}&fields=temperature,weatherCode&units=metric&timesteps=current&apikey=${API_KEY}`,
       {
-        next: { revalidate: 600 }, // cache for 10 minutes
+        next: { revalidate: 600 },
       }
     );
 
@@ -47,7 +46,7 @@ async function getWeather(): Promise<WeatherData | null> {
   }
 }
 
-export default async function Weather() {
+export async function Weather() {
   const weather = await getWeather();
 
   if (!weather) {
