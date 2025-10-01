@@ -10,15 +10,13 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { jetBrainsMono } from "@/lib/fonts";
 
 const product = {
-  name: "Muse: Discover. Create. Inspire. A Minimalist Platform to Capture, Share, and Explore Creative Ideas",
-  image: "/og-links.jpg",
+  name: "Start Page",
+  image: "/site.png",
   description:
-    "Capture and share spontaneous ideas with Muse, a fast and minimal platform where creators collaborate, get inspired, and give their thoughts a home. Get started today!",
+    "Transform your new tab into a minimalist productivity hub. Customize your browser start page with quick links, search shortcuts, and a clean design that keeps you focused.",
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  // Use constant product data for metadata
-
   return {
     title: {
       default: product.name,
@@ -28,37 +26,37 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL("https://www.muse.egeuysal.com/"),
     authors: [{ name: "Ege Uysal" }],
     keywords: [
-      "idea sharing platform",
-      "collaborative idea app",
-      "creative inspiration tool",
-      "minimalist idea board",
-      "thought sharing app",
-      "capture creative thoughts",
-      "fast idea capture",
-      "inspiration sharing platform",
-      "platform for creators",
-      "brainstorming and planning tool",
-      "mind mapping for creators",
-      "digital idea notebook",
-      "creative collaboration app",
-      "spontaneous idea capture",
-      "share and discover ideas",
-      "creativity boosting app",
-      "minimal notes app",
-      "creative journaling app",
-      "quick idea logger",
-      "real-time idea sharing",
+      "browser start page",
+      "new tab page",
+      "custom start page",
+      "productivity homepage",
+      "minimalist browser page",
+      "customizable new tab",
+      "browser homepage",
+      "quick links dashboard",
+      "personal start page",
+      "clean browser interface",
+      "productivity tools",
+      "bookmark organizer",
+      "fast start page",
+      "browser productivity",
+      "minimal new tab",
+      "custom homepage",
+      "web dashboard",
+      "browser customization",
+      "efficient browsing",
+      "focus homepage",
     ],
     openGraph: {
       title: product.name,
       description: product.description,
-      url: "https://www.muse.egeuysal.com/",
+      url: "https://www.start.egeuysal.com/",
       images: [
         {
           url: product.image,
           width: 1200,
-          height: 640,
-          alt: "Astra UI Logo",
+          height: 630,
+          alt: "Start Page Image",
         },
       ],
       type: "website",
@@ -67,11 +65,11 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      site: "@muse",
+      site: "@egecreates",
       title: product.name,
       description: product.description,
       images: [product.image],
-      creator: "@muse",
+      creator: "@egecreates",
     },
     icons: {
       icon: [
@@ -81,15 +79,14 @@ export async function generateMetadata(): Promise<Metadata> {
       apple: "/apple-touch-icon.png",
       shortcut: "/icon.ico",
     },
-    manifest: "/manifest.json",
     robots: {
       index: true,
       follow: true,
     },
     alternates: {
-      canonical: "https://www.muse.egeuysal.com/",
+      canonical: "https://www.start.egeuysal.com/",
     },
-    applicationName: "Muse",
+    applicationName: "Start Page",
     appleWebApp: {
       capable: true,
       statusBarStyle: "black-translucent",
@@ -167,7 +164,7 @@ export default async function RootLayout({
     sameAs: [
       "https://twitter.com/egecreates",
       "https://www.linkedin.com/in/egeuysal",
-      "https://www.instagram.com/egeuysalo",
+      "https://www.instagram.com/egecreates",
     ],
   };
 
