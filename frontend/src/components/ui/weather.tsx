@@ -28,7 +28,7 @@ async function getWeather(): Promise<WeatherData | null> {
     const res = await fetch(
       `https://api.tomorrow.io/v4/timelines?location=${LOCATION}&fields=temperature,weatherCode&units=metric&timesteps=current&apikey=${API_KEY}`,
       {
-        next: { revalidate: 600 },
+        next: { revalidate: 3600 }, // Cache for 1 hour instead of 10 minutes
       }
     );
 

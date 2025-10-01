@@ -8,20 +8,16 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Fonts and essentials
 import { jetBrainsMono } from "@/lib/fonts";
-import LayoutWrapper from "@/components/LayoutWrapper";
 
-async function getProduct() {
-  return {
-    name: "Muse: Discover. Create. Inspire. A Minimalist Platform to Capture, Share, and Explore Creative Ideas",
-    image: "/og-links.jpg",
-    description:
-      "Capture and share spontaneous ideas with Muse, a fast and minimal platform where creators collaborate, get inspired, and give their thoughts a home. Get started today!",
-  };
-}
+const product = {
+  name: "Muse: Discover. Create. Inspire. A Minimalist Platform to Capture, Share, and Explore Creative Ideas",
+  image: "/og-links.jpg",
+  description:
+    "Capture and share spontaneous ideas with Muse, a fast and minimal platform where creators collaborate, get inspired, and give their thoughts a home. Get started today!",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
-  // Fetch data needed for metadata
-  const product = await getProduct();
+  // Use constant product data for metadata
 
   return {
     title: {
@@ -109,8 +105,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const product = await getProduct();
-
   // Define date for product schema
   const priceValidUntilDate = new Date();
   priceValidUntilDate.setFullYear(priceValidUntilDate.getFullYear() + 1);
@@ -192,11 +186,9 @@ export default async function RootLayout({
       </head>
       <body className="w-screen h-screen flex flex-col items-center mt-12 mb-12">
         <main className="w-[75vw] md:w-[65vw] lg:w-[50vw]">
-          <LayoutWrapper jsonLdData={jsonLd}>
-            <Analytics />
-            {children}
-            <SpeedInsights />
-          </LayoutWrapper>
+          <Analytics />
+          {children}
+          <SpeedInsights />
         </main>
       </body>
     </html>

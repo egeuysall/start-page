@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 export const Clock: React.FC = () => {
-  const [time, setTime] = useState(getFormattedTime());
-  const [showColon, setShowColon] = useState(true);
-
-  function getFormattedTime() {
+  const getFormattedTime = useCallback(() => {
     const now = new Date();
     let hours = now.getHours();
     const minutes = now.getMinutes();
@@ -16,7 +13,10 @@ export const Clock: React.FC = () => {
 
     const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
     return `${hours}${formattedMinutes}`;
-  }
+  }, []);
+
+  const [time, setTime] = useState(getFormattedTime());
+  const [showColon, setShowColon] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,7 +25,7 @@ export const Clock: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [getFormattedTime]);
 
   return (
     <h1>
