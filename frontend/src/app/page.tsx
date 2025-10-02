@@ -22,7 +22,7 @@ const Home: React.FC = () => {
       </div>
       <Welcome />
       <Quotes />
-      <h5 className="text-left w-full">Search Google</h5>
+      <h5 className="text-left w-full">Search</h5>
       <Browser />
       <h5 className="text-left w-full">Links</h5>
       <section className="grid w-full gap-4 grid-cols-3 md:grid-cols-6">
