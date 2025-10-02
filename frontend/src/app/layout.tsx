@@ -182,7 +182,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="w-screen h-screen flex flex-col items-center mt-12 mb-12">
-        <main className="w-[75vw] md:w-[65vw] lg:w-[50vw]">
+        <main className="w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[50vw]">
           <Analytics />
           {children}
           <SpeedInsights />

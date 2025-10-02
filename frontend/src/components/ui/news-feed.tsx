@@ -13,14 +13,14 @@ async function fetchNews(): Promise<Article[]> {
     const res = await fetch(
       "https://api.rss2json.com/v1/api.json?rss_url=https://www.theverge.com/rss/index.xml",
       {
-        next: { revalidate: 1800 }, // Cache for 30 minutes
-      }
+        next: { revalidate: 1800 },
+      },
     );
-    
+
     if (!res.ok) return [];
-    
+
     const data = await res.json();
-    return data.items.slice(0, 6);
+    return data.items.slice(0, 4);
   } catch {
     return [];
   }
@@ -38,7 +38,7 @@ export const NewsFeed: React.FC = async () => {
   }
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {articles.map((article, index) => (
         <NewsCard key={index} article={article} />
       ))}

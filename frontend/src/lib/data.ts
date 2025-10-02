@@ -16,7 +16,7 @@ const youtubeIcon = React.createElement(Youtube, { size: iconSize });
 const notionIcon = React.createElement(PenLine, { size: iconSize });
 const vercelIcon = React.createElement(Triangle, { size: iconSize });
 const globeIcon = React.createElement(Globe, { size: iconSize });
-const claudeIcon = React.createElement(BrainCircuit, { size: iconSize });
+const aiIcon = React.createElement(BrainCircuit, { size: iconSize });
 
 export const links: LinkProps[] = [
   {
@@ -41,12 +41,12 @@ export const links: LinkProps[] = [
   },
   {
     id: 5,
-    href: "http://localhost:8080",
+    href: "http://localhost:3000",
     icon: globeIcon,
   },
   {
     id: 6,
-    href: "https://claude.ai/",
-    icon: claudeIcon,
+    href: "http://localhost:8080",
+    icon: aiIcon,
   },
 ];

@@ -10,7 +10,15 @@ export const Progress: React.FC = () => {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();
-    setCurrentTime(hours + minutes / 60);
+    const totalHours = hours + minutes / 60;
+
+    if (totalHours < 7) {
+      setCurrentTime(0);
+    } else if (totalHours >= 23) {
+      setCurrentTime(16);
+    } else {
+      setCurrentTime(totalHours - 7);
+    }
   }, []);
 
   useEffect(() => {
@@ -21,7 +29,7 @@ export const Progress: React.FC = () => {
 
   const config = useMemo(
     () => ({
-      max: 24,
+      max: 16,
       min: 0,
       value: currentTime,
       gaugePrimaryColor: "#d65d0e",
