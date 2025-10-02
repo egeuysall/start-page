@@ -64,6 +64,7 @@ export const Browser: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [recentSearch, setRecentSearch] = useState<string>("");
+  const [dynamicSuggestions, setDynamicSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -84,6 +85,30 @@ export const Browser: React.FC = () => {
     setRecentSearch(query);
     localStorage.setItem(RECENT_SEARCH_KEY, query);
   }, []);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      const trimmedInput = input.trim();
+      if (!trimmedInput || isValidUrl(trimmedInput)) {
+        setDynamicSuggestions([]);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(trimmedInput)}`,
+        );
+        const data = await response.json();
+        setDynamicSuggestions(data[1] || []);
+      } catch (error) {
+        console.error("Failed to fetch suggestions:", error);
+        setDynamicSuggestions([]);
+      }
+    };
+
+    const debounceTimer = setTimeout(fetchSuggestions, 150);
+    return () => clearTimeout(debounceTimer);
+  }, [input]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -124,6 +149,18 @@ export const Browser: React.FC = () => {
       });
     }
 
+    // Add dynamic suggestions first
+    dynamicSuggestions.slice(0, 5).forEach((suggestion) => {
+      results.push({
+        type: "engine",
+        text: suggestion,
+        display: suggestion,
+        Icon: Search,
+        engine: searchEngines[0], // Default to Google
+      });
+    });
+
+    // Add search engine options
     searchEngines.forEach((engine) => {
       results.push({
         type: "engine",
@@ -157,7 +194,7 @@ export const Browser: React.FC = () => {
     }
 
     return results;
-  }, [input, recentSearch]);
+  }, [input, recentSearch, dynamicSuggestions]);
 
   const currentSuggestions = suggestions();
 
