@@ -10,6 +10,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import type { SearchEngine, Suggestion } from "@/types/browser";
+import { getGoogleSuggestions } from "@/app/actions/search";
 
 const isValidUrl = (input: string): boolean => {
   if (input.match(/^localhost(:\d+)?/i)) return true;
@@ -64,8 +65,10 @@ export const Browser: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [recentSearch, setRecentSearch] = useState<string>("");
+  const [googleSuggestions, setGoogleSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem(RECENT_SEARCH_KEY);
@@ -115,6 +118,16 @@ export const Browser: React.FC = () => {
       return [];
     }
 
+    // Add Google suggestions first
+    googleSuggestions.forEach((suggestion) => {
+      results.push({
+        type: "google",
+        text: suggestion,
+        display: suggestion,
+        Icon: Search,
+      });
+    });
+
     if (isValidUrl(trimmedInput)) {
       results.push({
         type: "url",
@@ -157,7 +170,7 @@ export const Browser: React.FC = () => {
     }
 
     return results;
-  }, [input, recentSearch]);
+  }, [input, recentSearch, googleSuggestions]);
 
   const currentSuggestions = suggestions();
 
@@ -174,6 +187,9 @@ export const Browser: React.FC = () => {
         const query = suggestion.text;
         saveToRecent(query);
         window.location.href = searchEngines[0].url(query);
+      } else if (suggestion.type === "google") {
+        saveToRecent(suggestion.text);
+        window.location.href = searchEngines[0].url(suggestion.text);
       }
     },
     [saveToRecent],
@@ -200,9 +216,29 @@ export const Browser: React.FC = () => {
   );
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
+    const value = e.target.value;
+    setInput(value);
     setShowSuggestions(true);
     setSelectedIndex(0);
+
+    // Debounce Google suggestions API call
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    if (value.trim().length === 0) {
+      setGoogleSuggestions([]);
+      return;
+    }
+
+    debounceTimerRef.current = setTimeout(async () => {
+      const suggestions = await getGoogleSuggestions(value);
+      if (suggestions) {
+        setGoogleSuggestions(suggestions);
+      } else {
+        setGoogleSuggestions([]);
+      }
+    }, 300);
   }, []);
 
   const handleKeyDown = useCallback(

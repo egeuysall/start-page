@@ -5,6 +5,7 @@ import { progressBar } from "./progress-bar";
 
 export const Progress: React.FC = () => {
   const [currentTime, setCurrentTime] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   const update = useCallback(() => {
     const now = new Date();
@@ -22,6 +23,7 @@ export const Progress: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    setMounted(true);
     update();
     const timer = setInterval(update, 60000);
     return () => clearInterval(timer);
@@ -31,12 +33,12 @@ export const Progress: React.FC = () => {
     () => ({
       max: 16,
       min: 0,
-      value: currentTime,
+      value: mounted ? currentTime : 0,
       gaugePrimaryColor: "#d65d0e",
       gaugeSecondaryColor: "#ebdbb2",
       className: "mx-auto",
     }),
-    [currentTime]
+    [currentTime, mounted]
   );
 
   return progressBar(config);
