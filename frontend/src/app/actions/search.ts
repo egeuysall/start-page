@@ -3,9 +3,7 @@
 import * as convert from "xml-js";
 import type { GoogleSuggestionsResponse } from "@/types/browser";
 
-export async function getGoogleSuggestions(
-  query: string,
-): Promise<string[] | null> {
+export async function getGoogleSuggestions(query: string): Promise<string[] | null> {
   if (!query || query.trim().length === 0) {
     return null;
   }
@@ -14,8 +12,7 @@ export async function getGoogleSuggestions(
     const url = `https://suggestqueries.google.com/complete/search?output=toolbar&hl=en&q=${encodeURIComponent(query)}`;
     const response = await fetch(url, {
       headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       },
     });
 
@@ -30,17 +27,13 @@ export async function getGoogleSuggestions(
     }) as GoogleSuggestionsResponse;
 
     const suggestions: string[] = [];
-    const completeSuggestions =
-      json?.toplevel?.CompleteSuggestion ||
-      json?.suggestions?.CompleteSuggestion;
+    const completeSuggestions = json?.toplevel?.CompleteSuggestion || json?.suggestions?.CompleteSuggestion;
 
     if (!completeSuggestions) {
       return null;
     }
 
-    const items = Array.isArray(completeSuggestions)
-      ? completeSuggestions
-      : [completeSuggestions];
+    const items = Array.isArray(completeSuggestions) ? completeSuggestions : [completeSuggestions];
 
     for (const item of items) {
       const data = item?.suggestion?._attributes?.data;

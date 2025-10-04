@@ -13,35 +13,35 @@ import { NewsFeed } from "@/components/ui/news-feed";
 import { links } from "@/lib/data";
 
 const Home: React.FC = () => {
-  return (
-    <main className="w-full flex flex-col gap-4 flex-center pb-12">
-      <Progress />
-      <div className="flex-center gap-2">
-        <Clock />
-        <Weather />
-      </div>
-      <Welcome />
-      <Quotes />
-      <Browser />
-      <h5 className="text-left w-full">Links</h5>
-      <section className="grid w-full gap-4 grid-cols-3 md:grid-cols-6">
-        {links.map((link) => (
-          <Link {...link} key={link.id} />
-        ))}
-      </section>
-      <h5 className="text-left w-full">The feed</h5>
-      <NewsFeed />
-      <h5 className="text-left w-full">Code</h5>
-      <Image
-        src="https://github-readme-stats.hackclub.dev/api/wakatime?username=19901&api_domain=hackatime.hackclub.com&&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&theme=transparent"
-        alt="Hackatime Stats"
-        width={800}
-        height={400}
-        className="w-full"
-        unoptimized
-      />
-    </main>
-  );
+	return (
+		<main className="w-full flex flex-col gap-4 flex-center pb-12">
+			<Progress />
+			<div className="flex-center gap-2">
+				<Clock />
+				<Weather />
+			</div>
+			<Welcome />
+			<Quotes />
+			<Browser />
+			<h5 className="text-left w-full">Links</h5>
+			<section className="grid w-full gap-4 grid-cols-3 md:grid-cols-6">
+				{links.map((link) => (
+					<Link {...link} key={link.id} />
+				))}
+			</section>
+			<h5 className="text-left w-full">The feed</h5>
+			<NewsFeed />
+			<h5 className="text-left w-full">Code</h5>
+			<Image
+				src="https://github-readme-stats.hackclub.dev/api/wakatime?username=19901&api_domain=hackatime.hackclub.com&&custom_title=Hackatime+Stats&layout=compact&cache_seconds=0&langs_count=8&theme=transparent"
+				alt="Hackatime Stats"
+				width={800}
+				height={400}
+				className="w-full"
+				unoptimized
+			/>
+		</main>
+	);
 };
 
 export default Home;
