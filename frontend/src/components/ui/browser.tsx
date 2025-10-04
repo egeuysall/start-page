@@ -12,11 +12,12 @@ export const Browser: React.FC = () => {
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isPerplexityMode, setIsPerplexityMode] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { recentSearches, saveToRecent } = useBrowserStorage();
+  const { recentSearches, saveToRecent, searchMode, saveSearchMode } =
+    useBrowserStorage();
+  const isPerplexityMode = searchMode === "perplexity";
   const { googleSuggestions, fetchSuggestions } = useGoogleSuggestions();
 
   // Global keyboard shortcuts
@@ -30,13 +31,13 @@ export const Browser: React.FC = () => {
       // Option + P: Toggle Perplexity mode (π is the macOS alt+p character)
       if (e.altKey && (e.key === "p" || e.key === "π")) {
         e.preventDefault();
-        setIsPerplexityMode((prev) => !prev);
+        saveSearchMode(searchMode === "perplexity" ? "google" : "perplexity");
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [searchMode, saveSearchMode]);
 
   const currentSuggestions = buildSuggestions(
     input,
