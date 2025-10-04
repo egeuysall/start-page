@@ -1,98 +1,36 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import {
-  Search,
-  Globe,
-  Clock,
-  Youtube,
-  Github,
-  MessageSquare,
-} from "lucide-react";
-import type { SearchEngine, Suggestion } from "@/types/browser";
-import { getGoogleSuggestions } from "@/app/actions/search";
-
-const isValidUrl = (input: string): boolean => {
-  if (input.match(/^localhost(:\d+)?/i)) return true;
-  if (input.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?/)) return true;
-
-  const domainPattern = /^([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/.*)?$/i;
-  if (domainPattern.test(input)) return true;
-
-  try {
-    const url = new URL(input.startsWith("http") ? input : `https://${input}`);
-    return url.hostname.includes(".");
-  } catch {
-    return false;
-  }
-};
-
-const normalizeUrl = (input: string): string => {
-  if (input.startsWith("http://") || input.startsWith("https://")) {
-    return input;
-  }
-  return `https://${input}`;
-};
-
-const searchEngines: SearchEngine[] = [
-  {
-    name: "Google",
-    url: (q) => `https://www.google.com/search?q=${encodeURIComponent(q)}`,
-    Icon: Search,
-  },
-  {
-    name: "YouTube",
-    url: (q) =>
-      `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`,
-    Icon: Youtube,
-  },
-  {
-    name: "GitHub",
-    url: (q) => `https://github.com/search?q=${encodeURIComponent(q)}`,
-    Icon: Github,
-  },
-  {
-    name: "Reddit",
-    url: (q) => `https://www.reddit.com/search?q=${encodeURIComponent(q)}`,
-    Icon: MessageSquare,
-  },
-];
-
-const RECENT_SEARCH_KEY = "browser_recent_search";
+import type { Suggestion } from "@/types/browser";
+import { isValidUrl, normalizeUrl } from "@/lib/browser/url-utils";
+import { searchEngines } from "@/lib/browser/search-engines";
+import { buildSuggestions } from "@/lib/browser/suggestion-utils";
+import { useBrowserStorage } from "@/hooks/use-browser-storage";
+import { useGoogleSuggestions } from "@/hooks/use-google-suggestions";
 
 export const Browser: React.FC = () => {
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [recentSearch, setRecentSearch] = useState<string>("");
-  const [googleSuggestions, setGoogleSuggestions] = useState<string[]>([]);
+  const [isPerplexityMode, setIsPerplexityMode] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(RECENT_SEARCH_KEY);
-    if (stored) {
-      try {
-        setRecentSearch(stored);
-      } catch {
-        console.error("Failed to load recent search");
-      }
-    }
-  }, []);
+  const { recentSearch, saveToRecent } = useBrowserStorage();
+  const { googleSuggestions, fetchSuggestions } = useGoogleSuggestions();
 
-  const saveToRecent = useCallback((query: string) => {
-    if (!query.trim()) return;
-
-    setRecentSearch(query);
-    localStorage.setItem(RECENT_SEARCH_KEY, query);
-  }, []);
-
+  // Global keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd/Ctrl + K: Focus search input
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         inputRef.current?.focus();
+      }
+      // Option + P: Toggle Perplexity mode (π is the macOS alt+p character)
+      if (e.altKey && (e.key === "p" || e.key === "π")) {
+        e.preventDefault();
+        setIsPerplexityMode((prev) => !prev);
       }
     };
 
@@ -100,85 +38,27 @@ export const Browser: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const suggestions = useCallback((): Suggestion[] => {
-    const trimmedInput = input.trim();
-    const results: Suggestion[] = [];
+  const currentSuggestions = buildSuggestions(
+    input,
+    recentSearch,
+    googleSuggestions,
+  );
 
-    if (!trimmedInput) {
-      if (recentSearch) {
-        return [
-          {
-            type: "recent",
-            text: recentSearch,
-            display: recentSearch,
-            Icon: Clock,
-          },
-        ];
-      }
-      return [];
-    }
-
-    // Add Google suggestions first
-    googleSuggestions.forEach((suggestion) => {
-      results.push({
-        type: "google",
-        text: suggestion,
-        display: suggestion,
-        Icon: Search,
-      });
-    });
-
-    if (isValidUrl(trimmedInput)) {
-      results.push({
-        type: "url",
-        text: normalizeUrl(trimmedInput),
-        display: `Go to ${trimmedInput}`,
-        Icon: Globe,
-      });
-    }
-
-    searchEngines.forEach((engine) => {
-      results.push({
-        type: "engine",
-        text: trimmedInput,
-        display: `Search on ${engine.name}`,
-        Icon: engine.Icon,
-        engine,
-      });
-    });
-
-    if (
-      trimmedInput.toLowerCase().includes("github") ||
-      trimmedInput.startsWith("gh ")
-    ) {
-      const idx = results.findIndex((r) => r.engine?.name === "GitHub");
-      if (idx > -1) {
-        const [github] = results.splice(idx, 1);
-        results.unshift(github);
-      }
-    }
-
-    if (
-      trimmedInput.toLowerCase().includes("youtube") ||
-      trimmedInput.startsWith("yt ")
-    ) {
-      const idx = results.findIndex((r) => r.engine?.name === "YouTube");
-      if (idx > -1) {
-        const [yt] = results.splice(idx, 1);
-        results.unshift(yt);
-      }
-    }
-
-    return results;
-  }, [input, recentSearch, googleSuggestions]);
-
-  const currentSuggestions = suggestions();
-
+  // Handle navigation based on suggestion type
   const navigate = useCallback(
     (suggestion: Suggestion) => {
+      const perplexityEngine = searchEngines.find(
+        (e) => e.name === "Perplexity",
+      );
+      const defaultEngine =
+        isPerplexityMode && perplexityEngine
+          ? perplexityEngine
+          : searchEngines[0];
+
       if (suggestion.type === "url") {
         window.location.href = suggestion.text;
       } else if (suggestion.type === "engine" && suggestion.engine) {
+        // Handle engine-specific searches (e.g., "gh repo" for GitHub)
         const query = suggestion.text.replace(/^(gh|yt)\s+/i, "");
         saveToRecent(query);
         window.location.href = suggestion.engine.url(query);
@@ -186,13 +66,13 @@ export const Browser: React.FC = () => {
         setInput(suggestion.text);
         const query = suggestion.text;
         saveToRecent(query);
-        window.location.href = searchEngines[0].url(query);
+        window.location.href = defaultEngine.url(query);
       } else if (suggestion.type === "google") {
         saveToRecent(suggestion.text);
-        window.location.href = searchEngines[0].url(suggestion.text);
+        window.location.href = defaultEngine.url(suggestion.text);
       }
     },
-    [saveToRecent],
+    [saveToRecent, isPerplexityMode],
   );
 
   const handleSubmit = useCallback(
@@ -201,6 +81,14 @@ export const Browser: React.FC = () => {
       const trimmedInput = input.trim();
       if (!trimmedInput) return;
 
+      const perplexityEngine = searchEngines.find(
+        (e) => e.name === "Perplexity",
+      );
+      const defaultEngine =
+        isPerplexityMode && perplexityEngine
+          ? perplexityEngine
+          : searchEngines[0];
+
       if (isValidUrl(trimmedInput)) {
         window.location.href = normalizeUrl(trimmedInput);
       } else {
@@ -208,38 +96,30 @@ export const Browser: React.FC = () => {
           navigate(currentSuggestions[selectedIndex]);
         } else {
           saveToRecent(trimmedInput);
-          window.location.href = searchEngines[0].url(trimmedInput);
+          window.location.href = defaultEngine.url(trimmedInput);
         }
       }
     },
-    [input, currentSuggestions, selectedIndex, navigate, saveToRecent],
+    [
+      input,
+      currentSuggestions,
+      selectedIndex,
+      navigate,
+      saveToRecent,
+      isPerplexityMode,
+    ],
   );
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInput(value);
-    setShowSuggestions(true);
-    setSelectedIndex(0);
-
-    // Debounce Google suggestions API call
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    if (value.trim().length === 0) {
-      setGoogleSuggestions([]);
-      return;
-    }
-
-    debounceTimerRef.current = setTimeout(async () => {
-      const suggestions = await getGoogleSuggestions(value);
-      if (suggestions) {
-        setGoogleSuggestions(suggestions);
-      } else {
-        setGoogleSuggestions([]);
-      }
-    }, 300);
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setInput(value);
+      setShowSuggestions(true);
+      setSelectedIndex(0);
+      fetchSuggestions(value);
+    },
+    [fetchSuggestions],
+  );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -288,58 +168,63 @@ export const Browser: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <div className="w-full relative">
-      <form onSubmit={handleSubmit} className="w-full flex-center">
-        <input
-          ref={inputRef}
-          type="text"
-          value={input}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setShowSuggestions(true)}
-          placeholder="Search or enter URL"
-          className="w-full caret-primary-200 outline-none focus:ring-2 py-2 px-3 rounded-lg placeholder:opacity-50 placeholder:text-primary-200 focus:ring-primary-200 text-primary-200 transition duration-200 text-base md:text-lg tracking-tight bg-accent-100"
-          autoFocus
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
-        />
-      </form>
+    <div className="w-full flex flex-col gap-4">
+      <h5 className="text-left w-full">
+        {isPerplexityMode ? "Ask Perplexity" : "Search"}
+      </h5>
+      <div className="w-full relative">
+        <form onSubmit={handleSubmit} className="w-full flex-center">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setShowSuggestions(true)}
+            placeholder="Search or enter URL"
+            className="w-full caret-primary-200 outline-none focus:ring-2 py-2 px-3 rounded-lg placeholder:opacity-50 placeholder:text-primary-200 focus:ring-primary-200 text-primary-200 transition duration-200 text-base md:text-lg tracking-tight bg-accent-100"
+            autoFocus
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+          />
+        </form>
 
-      {showSuggestions && currentSuggestions.length > 0 && (
-        <div
-          ref={dropdownRef}
-          className="absolute w-full mt-2 bg-accent-100 rounded-lg shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-1 duration-200"
-        >
-          {currentSuggestions.map((suggestion, index) => (
-            <button
-              key={`${suggestion.type}-${index}`}
-              type="button"
-              onClick={() => navigate(suggestion)}
-              className={`w-full px-3 py-2 text-left flex items-center gap-3 transition-colors duration-150 ${
-                index === selectedIndex
-                  ? "bg-primary-200/10 text-primary-200"
-                  : "text-primary-200/70 hover:bg-primary-200/5 hover:text-primary-200"
-              }`}
-              onMouseEnter={() => setSelectedIndex(index)}
-            >
-              {suggestion.Icon && (
-                <suggestion.Icon
-                  size={18}
-                  className="flex-shrink-0 opacity-70"
-                />
-              )}
-              <span className="flex-1 truncate text-sm md:text-base">
-                {suggestion.display}
-              </span>
-              {suggestion.type === "recent" && (
-                <span className="text-xs opacity-50">Recent</span>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+        {showSuggestions && currentSuggestions.length > 0 && (
+          <div
+            ref={dropdownRef}
+            className="absolute w-full mt-2 bg-accent-100 rounded-lg shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-1 duration-200"
+          >
+            {currentSuggestions.map((suggestion, index) => (
+              <button
+                key={`${suggestion.type}-${index}`}
+                type="button"
+                onClick={() => navigate(suggestion)}
+                className={`w-full px-3 py-2 text-left flex items-center gap-3 transition-colors duration-150 ${
+                  index === selectedIndex
+                    ? "bg-primary-200/10 text-primary-200"
+                    : "text-primary-200/70 hover:bg-primary-200/5 hover:text-primary-200"
+                }`}
+                onMouseEnter={() => setSelectedIndex(index)}
+              >
+                {suggestion.Icon && (
+                  <suggestion.Icon
+                    size={18}
+                    className="flex-shrink-0 opacity-70"
+                  />
+                )}
+                <span className="flex-1 truncate text-sm md:text-base">
+                  {suggestion.display}
+                </span>
+                {suggestion.type === "recent" && (
+                  <span className="text-xs opacity-50">Recent</span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

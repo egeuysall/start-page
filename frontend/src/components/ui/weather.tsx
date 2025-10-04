@@ -1,39 +1,10 @@
-import { Sun, Cloud, CloudRain, CloudSnow, CloudLightning } from "lucide-react";
+import type { WeatherData } from "@/types/weather";
+import { getWeatherIcon } from "@/lib/utils/weather-utils";
 
 const API_KEY = process.env.TOMORROW_API_KEY;
 const LOCATION = process.env.TOMORROW_LOCATION;
 
-type WeatherData = {
-  temp: number;
-  weatherCode: number;
-};
-
-const getWeatherIcon = (code: number) => {
-  if (code >= 800 && code < 900)
-    return (
-      <Sun className="text-primary-400 dark:text-primary-200 opacity-50" />
-    );
-  if ([500, 501, 520, 521].includes(code))
-    return (
-      <CloudRain className="text-primary-400 dark:text-primary-200 opacity-50" />
-    );
-  if ([600, 601, 602].includes(code))
-    return (
-      <CloudSnow className="text-primary-400 dark:text-primary-200 opacity-50" />
-    );
-  if ([200, 201, 202].includes(code))
-    return (
-      <CloudLightning className="text-primary-400 dark:text-primary-200 opacity-50" />
-    );
-  if ([701, 711, 721, 741].includes(code))
-    return (
-      <Cloud className="text-primary-400 dark:text-primary-200 opacity-50" />
-    );
-  return (
-    <Cloud className="text-primary-400 dark:text-primary-200 opacity-50" />
-  );
-};
-
+// Fetch current weather data from Tomorrow.io API
 async function getWeather(): Promise<WeatherData | null> {
   if (!API_KEY || !LOCATION) return null;
 

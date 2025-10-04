@@ -2,8 +2,8 @@ import React from "react";
 import {
   Github,
   Youtube,
-  PenLine,
-  Triangle,
+  Server,
+  NotebookText,
   Globe,
   BrainCircuit,
 } from "lucide-react";
@@ -13,8 +13,8 @@ const iconSize = 30;
 
 const githubIcon = React.createElement(Github, { size: iconSize });
 const youtubeIcon = React.createElement(Youtube, { size: iconSize });
-const notionIcon = React.createElement(PenLine, { size: iconSize });
-const vercelIcon = React.createElement(Triangle, { size: iconSize });
+const serverIcon = React.createElement(Server, { size: iconSize });
+const canvasIcon = React.createElement(NotebookText, { size: iconSize });
 const globeIcon = React.createElement(Globe, { size: iconSize });
 const aiIcon = React.createElement(BrainCircuit, { size: iconSize });
 
@@ -25,19 +25,19 @@ export const links: LinkProps[] = [
     icon: githubIcon,
   },
   {
-    id: 2,
-    href: "https://youtube.com/",
-    icon: youtubeIcon,
-  },
-  {
-    id: 3,
-    href: "https://www.notion.so",
-    icon: notionIcon,
+    id: 6,
+    href: "https://claude.ai",
+    icon: aiIcon,
   },
   {
     id: 4,
-    href: "https://vercel.com",
-    icon: vercelIcon,
+    href: "https://d125.instructure.com/?login_success=1",
+    icon: canvasIcon,
+  },
+  {
+    id: 3,
+    href: "http://localhost:8080",
+    icon: serverIcon,
   },
   {
     id: 5,
@@ -45,8 +45,8 @@ export const links: LinkProps[] = [
     icon: globeIcon,
   },
   {
-    id: 6,
-    href: "http://localhost:8080",
-    icon: aiIcon,
+    id: 2,
+    href: "https://youtube.com/",
+    icon: youtubeIcon,
   },
 ];
