@@ -16,7 +16,7 @@ export const Browser: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { recentSearch, saveToRecent } = useBrowserStorage();
+  const { recentSearches, saveToRecent } = useBrowserStorage();
   const { googleSuggestions, fetchSuggestions } = useGoogleSuggestions();
 
   // Global keyboard shortcuts
@@ -40,7 +40,7 @@ export const Browser: React.FC = () => {
 
   const currentSuggestions = buildSuggestions(
     input,
-    recentSearch,
+    recentSearches,
     googleSuggestions,
   );
 

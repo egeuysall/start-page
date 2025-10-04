@@ -5,24 +5,19 @@ import { searchEngines } from "./search-engines";
 
 export const buildSuggestions = (
   input: string,
-  recentSearch: string,
+  recentSearches: string[],
   googleSuggestions: string[],
 ): Suggestion[] => {
   const trimmedInput = input.trim();
   const results: Suggestion[] = [];
 
   if (!trimmedInput) {
-    if (recentSearch) {
-      return [
-        {
-          type: "recent",
-          text: recentSearch,
-          display: recentSearch,
-          Icon: Clock,
-        },
-      ];
-    }
-    return [];
+    return recentSearches.map((search) => ({
+      type: "recent",
+      text: search,
+      display: search,
+      Icon: Clock,
+    }));
   }
 
   // Add Google suggestions first
